@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Neutrome Eve - Admin System Configuration
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="neutrome" translate="label" sortOrder="400">
+            <label>Neutrome</label>
+        </tab>
+        <section id="neutrome_eve" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>Eve Fraud Detection</label>
+            <tab>neutrome</tab>
+            <resource>NeutromeLabs_Eve::config</resource>
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General Settings</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Eve Integration</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enable or disable Eve fraud detection integration.</comment>
+                </field>
+            </group>
+            <group id="collectors" translate="label comment" type="text" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Data Collectors</label>
+                <comment><![CDATA[Configure which data to send to Eve for anomaly detection.]]></comment>
+                <field id="events_enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Events Collector</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Collect Magento events (orders, cart, customer actions, etc.)</comment>
+                    <depends>
+                        <field id="*/general/enabled">1</field>
+                    </depends>
+                </field>
+                <field id="logs_enabled" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Logs Collector</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Collect system logs (errors, warnings, etc.) for anomaly detection</comment>
+                    <depends>
+                        <field id="*/general/enabled">1</field>
+                    </depends>
+                </field>
+                <field id="customer_group_scores" translate="label comment" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Customer Group Scores</label>
+                    <frontend_model>NeutromeLabs\Eve\Block\Adminhtml\Form\Field\CustomerGroupScores</frontend_model>
+                    <backend_model>NeutromeLabs\Eve\Model\Config\Backend\CustomerGroupScores</backend_model>
+                    <comment><![CDATA[
+                        Set input_score per customer group:<br/>
+                        <strong>Empty</strong> = ML scoring mode (events sent without score)<br/>
+                        <strong>0.0</strong> = Good/normal (training baseline)<br/>
+                        <strong>1.0</strong> = Bad/anomaly (flagged)<br/>
+                        <strong>0.0-1.0</strong> = Custom score weight
+                    ]]></comment>
+                    <depends>
+                        <field id="*/general/enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+            <group id="api" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                <label>API Configuration</label>
+                <field id="vector_endpoint" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Vector Endpoint</label>
+                    <comment>Full URL to Vector event ingestion endpoint (e.g., https://eve.neutrome.dev/ingest)</comment>
+                    <validate>validate-url</validate>
+                </field>
+                <field id="graphql_endpoint" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>GraphQL Endpoint</label>
+                    <comment>Full URL to Hasura GraphQL endpoint (e.g., https://eve.neutrome.dev/v1/graphql)</comment>
+                    <validate>validate-url</validate>
+                </field>
+                <field id="hasura_secret" translate="label comment" type="obscure" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Hasura Admin Secret</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    <comment>Hasura admin secret for GraphQL authentication</comment>
+                </field>
+                <field id="series_name" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Series Name</label>
+                    <comment>Series identifier for this Magento instance</comment>
+                </field>
+                <field id="timeout" translate="label comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>API Timeout (seconds)</label>
+                    <validate>validate-number</validate>
+                </field>
+            </group>
+            <group id="feed" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Feed Configuration</label>
+                <comment><![CDATA[
+                    Eve publishes notifications to an RSS-style feed that Magento polls periodically.<br/>
+                    Feed entries include: bad_user, bad_event, training_started, training_completed, training_failed.
+                ]]></comment>
+                <field id="polling_enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable Feed Polling</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Poll Eve feed via cron (every 5 minutes) for notifications</comment>
+                </field>
+                <field id="auto_block_enabled" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Auto-Block Bad Users</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Automatically block customer accounts when bad_user feed entry received (production mode only)</comment>
+                    <depends>
+                        <field id="polling_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="block_score_threshold" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Block Score Threshold</label>
+                    <comment>Minimum score (0.0-1.0) to trigger auto-blocking</comment>
+                    <validate>validate-number</validate>
+                    <depends>
+                        <field id="auto_block_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="notify_admin" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Notify Admin on Block</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+            <group id="debug" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Debug Settings</label>
+                <field id="logging_enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable Debug Logging</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Log all Eve API requests to var/log/neutrome_eve.log</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

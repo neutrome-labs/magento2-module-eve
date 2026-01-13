@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Neutrome Eve - Cron Jobs Configuration
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="default">
+        <job name="neutrome_eve_poll_feed" instance="NeutromeLabs\Eve\Cron\PollFeed" method="execute">
+            <schedule>*/5 * * * *</schedule>
+        </job>
+    </group>
+</config>

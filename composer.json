@@ -1,0 +1,36 @@
+{
+    "name": "neutrome-labs/magento2-module-eve",
+    "description": "Eve Fraud Detection integration for Magento 2 - Event & log collectors with ML-powered anomaly detection",
+    "type": "magento2-module",
+    "version": "2.0.0",
+    "license": [
+        "MIT"
+    ],
+    "authors": [
+        {
+            "name": "Neutrome Labs",
+            "email": "dev@neutrome.dev"
+        }
+    ],
+    "keywords": [
+        "magento2",
+        "fraud-detection",
+        "anomaly-detection",
+        "machine-learning",
+        "eve"
+    ],
+    "homepage": "https://github.com/neutrome-labs/magento2-module-eve",
+    "require": {
+        "php": ">=8.1",
+        "magento/framework": ">=103.0",
+        "guzzlehttp/guzzle": "^7.0"
+    },
+    "autoload": {
+        "files": [
+            "src/NeutromeLabs/Eve/registration.php"
+        ],
+        "psr-4": {
+            "NeutromeLabs\\Eve\\": "src/NeutromeLabs/Eve/"
+        }
+    }
+}

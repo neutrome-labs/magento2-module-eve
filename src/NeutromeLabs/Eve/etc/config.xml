@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Neutrome Eve - Default Configuration Values
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <neutrome_eve>
+            <general>
+                <enabled>1</enabled>
+            </general>
+            <collectors>
+                <events_enabled>1</events_enabled>
+                <logs_enabled>1</logs_enabled>
+                <customer_group_scores></customer_group_scores>
+            </collectors>
+            <api>
+                <vector_endpoint>https://eve.neutrome.dev/ingest</vector_endpoint>
+                <graphql_endpoint>https://eve.neutrome.dev/v1/graphql</graphql_endpoint>
+                <hasura_secret></hasura_secret>
+                <series_name>magento2_store</series_name>
+                <timeout>5</timeout>
+            </api>
+            <feed>
+                <polling_enabled>0</polling_enabled>
+                <auto_block_enabled>0</auto_block_enabled>
+                <block_score_threshold>0.8</block_score_threshold>
+                <notify_admin>1</notify_admin>
+            </feed>
+            <debug>
+                <logging_enabled>0</logging_enabled>
+            </debug>
+        </neutrome_eve>
+    </default>
+</config>

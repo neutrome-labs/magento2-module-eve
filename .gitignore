@@ -1,0 +1,25 @@
+# Magento 2 Module - Eve Fraud Detection
+# .gitignore for standalone repository
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Composer
+/vendor/
+composer.lock
+
+# Testing
+/phpunit.xml
+/coverage/
+.phpunit.result.cache
+
+# Build artifacts
+*.phar
